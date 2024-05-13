@@ -96,7 +96,6 @@ def group_locations(image):
 
 
 def extract_micr(image):
-    # global g_y
     blackhat, gray, delta = extract_blackhat(image=image)
     group_locs = group_locations(image=image)
     chars = find_ref_micr_data()
@@ -104,23 +103,23 @@ def extract_micr(image):
     for (g_x, g_y, g_w, g_h) in group_locs:
         group_output = []
         group = gray[g_y - 2:g_y + g_h + 2, g_x - 2:g_x + g_w + 2]
-    group = cv2.threshold(group, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+        group = cv2.threshold(group, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
-    char_cnts = cv2.findContours(group.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    char_cnts = imutils.grab_contours(char_cnts)
-    char_cnts = contours.sort_contours(char_cnts, method="left-to-right")[0]
-    (rois, locs) = extract_digits_and_symbols(group, char_cnts)
-    for roi in rois:
-        scores = []
-        roi = cv2.resize(roi, (36, 36))
-        for charName in charNames:
-            result = cv2.matchTemplate(roi, chars[charName], cv2.TM_CCORR)
-            (_, score, _, _) = cv2.minMaxLoc(result)
-            scores.append(score)
-        group_output.append(charNames[np.argmax(scores)])
-    cv2.rectangle(image, (g_x - 10, g_y + delta - 10), (g_x + g_w + 10, g_y + g_y + delta), (0, 0, 255), 2)
-    cv2.putText(image, "".join(group_output),
-                (g_x - 10, g_y + delta - 25), cv2.FONT_HERSHEY_SIMPLEX, 0.95, (0, 0, 255), 2)
-    output.append("".join(group_output))
+        char_cnts = cv2.findContours(group.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        char_cnts = imutils.grab_contours(char_cnts)
+        char_cnts = contours.sort_contours(char_cnts, method="left-to-right")[0]
+        (rois, locs) = extract_digits_and_symbols(group, char_cnts)
+        for roi in rois:
+            scores = []
+            roi = cv2.resize(roi, (36, 36))
+            for charName in charNames:
+                result = cv2.matchTemplate(roi, chars[charName], cv2.TM_CCORR)
+                (_, score, _, _) = cv2.minMaxLoc(result)
+                scores.append(score)
+            group_output.append(charNames[np.argmax(scores)])
+        cv2.rectangle(image, (g_x - 10, g_y + delta - 10), (g_x + g_w + 10, g_y + g_y + delta), (0, 0, 255), 2)
+        cv2.putText(image, "".join(group_output),
+                    (g_x - 10, g_y + delta - 25), cv2.FONT_HERSHEY_SIMPLEX, 0.95, (0, 0, 255), 2)
+        output.append("".join(group_output))
     output = " ".join(output)
     return output, image
