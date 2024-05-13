@@ -7,6 +7,8 @@ import imutils
 import skimage
 import argparse
 
+os.environ['DISPLAY'] = ':0'
+
 ap = argparse.ArgumentParser()
 ap.add_argument('--image', required=True, help='Absolute path of image')
 args = vars(ap.parse_args())
