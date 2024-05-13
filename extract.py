@@ -21,6 +21,7 @@ image = input_
 print(f'Extracting from: {image}')
 
 preprocessed_img = p.preprocess(image_path=image)
+print(f'preprocessed_img: {preprocessed_img}')
 extracted_micr, contour_img = extract.extract_micr(image=preprocessed_img)
 
 print(f'MICR Code: {extracted_micr}')
