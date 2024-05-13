@@ -96,6 +96,7 @@ def group_locations(image):
 
 
 def extract_micr(image):
+    global g_y
     blackhat, gray, delta = extract_blackhat(image=image)
     group_locs = group_locations(image=image)
     chars = find_ref_micr_data()
