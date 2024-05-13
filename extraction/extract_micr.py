@@ -96,14 +96,14 @@ def group_locations(image):
 
 
 def extract_micr(image):
-    global g_y
+    # global g_y
     blackhat, gray, delta = extract_blackhat(image=image)
     group_locs = group_locations(image=image)
     chars = find_ref_micr_data()
     output = []
     for (g_x, g_y, g_w, g_h) in group_locs:
         group_output = []
-    group = gray[g_y - 2:g_y + g_h + 2, g_x - 2:g_x + g_w + 2]
+        group = gray[g_y - 2:g_y + g_h + 2, g_x - 2:g_x + g_w + 2]
     group = cv2.threshold(group, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
     char_cnts = cv2.findContours(group.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
